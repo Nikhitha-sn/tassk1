@@ -1,0 +1,68 @@
+import random
+
+def get_number_input(prompt):
+    while True:
+        try:
+            num = int(input(prompt))
+            if num >= 10:  # Ensure multi-digit number
+                return num
+            else:
+                print("Please enter a multi-digit number.")
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+
+def give_feedback(num, guess):
+    str_num = str(num)
+    str_guess = str(guess)
+    correct = ['X'] * len(str_num)
+    count = 0
+    
+    for i in range(len(str_num)):
+        if str_guess[i] == str_num[i]:
+            count += 1
+            correct[i] = str_guess[i]
+    
+    return count, ''.join(correct)
+
+def play_round(setter, guesser):
+    num = get_number_input(f"{setter}, set a multi-digit number: ")
+    attempts = 0
+    
+    while True:
+        guess = get_number_input(f"{guesser}, guess the number: ")
+        attempts += 1
+        
+        if guess == num:
+            print(f"Congratulations {guesser}! You guessed the number correctly in {attempts} tries!")
+            return attempts
+        else:
+            count, feedback = give_feedback(num, guess)
+            print(f"Not quite the number. You got {count} digit(s) correct: {feedback}")
+
+def mastermind_game():
+    print("Welcome to Mastermind!")
+    
+    while True:
+        # Player 1 starts
+        player1 = "Player 1"
+        player2 = "Player 2"
+        
+        print(f"{player1} will set a number and {player2} will guess.")
+        attempts_player2 = play_round(player1, player2)
+        
+        print(f"Now, {player2} will set a number and {player1} will guess.")
+        attempts_player1 = play_round(player2, player1)
+        
+        if attempts_player1 < attempts_player2:
+            print(f"{player1} wins by guessing in fewer tries!")
+        else:
+            print(f"{player2} wins as {player1} took more tries or tied!")
+        
+        # Ask if players want to play again
+        play_again = input("Would you like to play again? (yes/no): ").strip().lower()
+        if play_again != 'yes':
+            print("Thanks for playing! Goodbye!")
+            break
+
+# Start the game
+mastermind_game()
